@@ -13,8 +13,11 @@ from werkzeug.exceptions import HTTPException
 from ambianic import config, DEFAULT_DATA_DIR, __version__
 from ambianic.util import ServiceExit, ThreadedJob, ManagedService
 from ambianic.webapp.server import samples, config_sources
+from fastapi import FastAPI
 
 log = logging.getLogger(__name__)
+
+doc_generator = FastAPI()
 
 # configuration
 DEBUG = True
@@ -158,7 +161,9 @@ def create_app(data_dir=None):
         response_object = {'status': 'OK', 'version': __version__}
         resp = jsonify(response_object)
         return resp
-
+    
+    #added decorator
+    @doc_generator.get("/api/timeline")
     @app.route('/api/timeline', methods=['GET'])
     @app.route('/api/timeline.json', methods=['GET'])
     def get_timeline():
